@@ -2,41 +2,22 @@
 
 import { useSignInWithGoogle } from 'react-firebase-hooks/auth'
 import { auth } from '@/app/firebase/config'
-import { login } from '@/lib/actions/auth';
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage () {
-  // const [ createUserWithGoogle ] = useSignInWithGoogle(auth);
+  const [ createUserWithGoogle ] = useSignInWithGoogle(auth);
+  const router = useRouter();
 
-  // const handleGoogleLogin = async () => {
-  //   try {
-  //     const res = await createUserWithGoogle();
-
-  //     console.log(res);
-      
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-
-  useEffect(() => {
-    async function fetchProfile() {
-      try {
-        const res = await fetch(`/api/instagram/coletivemo`)
-        if (!res.ok) {
-          throw new Error('Erro ao buscar dados do Instagram.')
-        }
-        const json = await res.json()
-
-        console.log(json);
-        
-      } catch (err) {
-        console.log(err);
-      }
+  const handleGoogleLogin = async () => {
+    try {
+      const res = await createUserWithGoogle();
+      router.push('/');
+      sessionStorage.setItem('user', JSON.stringify(res?.user));
+    } catch (error) {
+      console.error(error);
     }
-
-    fetchProfile()
-  }, [])
+  }
 
   return (
     <div className='flex flex-col items-center justify-start min-h-screen bg-black text-white px-6'>
@@ -55,7 +36,7 @@ export default function LoginPage () {
         <p className='text-lg mb-6'>Login with</p>
 
         {/* Google login button */}
-        <button className='flex cursor-pointer items-center justify-center w-12 h-12 rounded-full bg-white overflow-hidden' onClick={() => login()}>
+        <button className='flex cursor-pointer items-center justify-center w-12 h-12 rounded-full bg-white overflow-hidden' onClick={() => handleGoogleLogin()}>
           <svg
             xmlns='http://www.w3.org/2000/svg'
             width='24'

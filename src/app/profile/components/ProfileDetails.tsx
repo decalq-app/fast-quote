@@ -1,10 +1,10 @@
-import ProfilePicture from "./ProfilePicture";
 import { CheckCircle, MapPin } from "lucide-react";
+import ProfilePicture from "./ProfilePicture";
 
 export default function ProfileDetails() {
   return (
     <div className="flex flex-col items-start">
-      <ProfilePicture src="/placeholder.svg?height=96&width=96" alt="Profile picture" />
+      <ProfilePicture src="https://picsum.photos/96/96" alt="Profile picture" />
       <div className="mt-4 flex items-center gap-2">
         <h2 className="text-4xl font-bold">Krauser</h2>
         <CheckCircle className="h-6 w-6 text-white" />
