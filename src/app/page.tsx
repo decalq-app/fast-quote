@@ -14,10 +14,6 @@ export default function Home () {
 
     if (!user && !userSession) {
       return router.push('/login')
-    } else {
-      console.log(user);
-      
-      return router.push('/profile')
     }
   }, [])
 
@@ -25,5 +21,5 @@ export default function Home () {
     return <h1>Loading...</h1>
   }
 
-  return <h1>Not logged</h1>
+  return <h1>Vai pro profile rapai</h1>
 }

@@ -2,41 +2,85 @@
 
 import { useSignInWithGoogle } from 'react-firebase-hooks/auth'
 import { auth } from '@/app/firebase/config'
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  serverTimestamp,
+  setDoc,
+  where
+} from '@firebase/firestore'
+import db from '@/app/firebase/firestore/config'
+import type { User } from 'firebase/auth'
 
 export default function LoginPage () {
-  const [ createUserWithGoogle ] = useSignInWithGoogle(auth);
-  const router = useRouter();
+  const [createUserWithGoogle] = useSignInWithGoogle(auth)
+  const router = useRouter()
 
   const handleGoogleLogin = async () => {
     try {
-      const res = await createUserWithGoogle();
-      router.push('/');
-      sessionStorage.setItem('user', JSON.stringify(res?.user));
+      const res = await createUserWithGoogle()
+
+      if (res?.user) {
+        await createUser(res.user)
+      }
     } catch (error) {
-      console.error(error);
+      console.error(error)
+    }
+  }
+
+  const createUser = async (user: User) => {
+    try {
+      sessionStorage.setItem('user', JSON.stringify(user))
+      const { uid, email, displayName, photoURL } = user
+      const username = displayName?.toLowerCase().replaceAll(' ', '_')
+
+      const userRef = doc(db, 'users', uid)
+      const userSnapshot = await getDoc(userRef)
+      if (!userSnapshot.exists()) {
+        await setDoc(userRef, {
+          uid,
+          email,
+          displayName,
+          username,
+          photoURL,
+          createdAt: serverTimestamp()
+        })
+        console.log('Usuário criado com sucesso!')
+      } else {
+        console.log('Usuário já existe!')
+      }
+
+      router.push(`/profile/${username}`)
+    } catch (error) {
+      console.error(error)
     }
   }
 
   return (
     <div className='flex flex-col items-center justify-start min-h-screen bg-black text-white px-6'>
-      {/* Logo with skull icon */}
       <div className='flex flex-col items-center mt-96 mb-16'>
         <div className='relative'>
           <h1 className='text-5xl font-bold'>
-            <span className=' bg-gradient-to-r from-pink-200 to-red-300 bg-clip-text text-transparent'>decalq</span>
+            <span className=' bg-gradient-to-r from-pink-200 to-red-300 bg-clip-text text-transparent'>
+              decalq
+            </span>
             <sup className='text-2xl absolute top-0 ml-1'>®</sup>
           </h1>
         </div>
       </div>
 
-      {/* Login section */}
       <div className='flex flex-col items-center'>
         <p className='text-lg mb-6'>Login with</p>
 
-        {/* Google login button */}
-        <button className='flex cursor-pointer items-center justify-center w-12 h-12 rounded-full bg-white overflow-hidden' onClick={() => handleGoogleLogin()}>
+        <button
+          className='flex cursor-pointer items-center justify-center w-12 h-12 rounded-full bg-white overflow-hidden'
+          onClick={() => handleGoogleLogin()}
+        >
           <svg
             xmlns='http://www.w3.org/2000/svg'
             width='24'
