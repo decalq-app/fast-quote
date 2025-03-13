@@ -15,7 +15,7 @@ export default function Home () {
     if (!user && !userSession) {
       return router.push('/login')
     }
-  }, [])
+  }, [router, user])
 
   if (loading) {
     return <h1>Loading...</h1>

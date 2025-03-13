@@ -3,17 +3,7 @@
 import { useSignInWithGoogle } from 'react-firebase-hooks/auth'
 import { auth } from '@/app/firebase/config'
 import { useRouter } from 'next/navigation'
-import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  serverTimestamp,
-  setDoc,
-  where
-} from '@firebase/firestore'
+import { doc, getDoc, serverTimestamp, setDoc } from '@firebase/firestore'
 import db from '@/app/firebase/firestore/config'
 import type { User } from 'firebase/auth'
 

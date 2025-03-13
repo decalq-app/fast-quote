@@ -1,5 +1,5 @@
 import { CheckCircle, MapPin } from 'lucide-react'
-import { collection, doc, query, where, type DocumentData } from '@firebase/firestore'
+import { collection, query, where, type DocumentData } from '@firebase/firestore'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { useParams } from 'next/navigation'
 import React from 'react'
