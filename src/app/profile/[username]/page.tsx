@@ -42,15 +42,18 @@ export default function InkerProfile () {
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
-                <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+                <DrawerTitle>Orçamento rápido</DrawerTitle>
                 <DrawerDescription>
-                  This action cannot be undone.
+                  Envie referencias e detalhes do seu projeto para que possamos
+                  te ajudar.
                 </DrawerDescription>
               </DrawerHeader>
               <DrawerFooter>
                 <Button>Submit</Button>
                 <DrawerClose>
-                  <Button className='w-full' variant='outline'>Cancel</Button>
+                  <Button className='w-full' variant='outline'>
+                    Cancel
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>

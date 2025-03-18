@@ -23,7 +23,7 @@ export default function ProfileDetails () {
       <ProfilePicture src={user.photoURL} alt='Profile picture' />
       <div className='mt-4 flex items-center gap-2'>
         <h2 className='text-2xl font-medium'>{ user.displayName }</h2>
-        <CheckCircle className='h-6 w-6 text-white' />
+        <CheckCircle className='h-4 w-4 text-white' />
       </div>
       <div className='mt-1 flex items-center text-gray-400'>
         <MapPin className='h-4 w-4 mr-1' />
