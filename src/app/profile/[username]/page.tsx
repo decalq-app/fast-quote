@@ -1,48 +1,63 @@
 'use client'
 
 import { signOut } from 'firebase/auth'
-import ActionButton from './components/ActionButton'
 import Logo from './components/Logo'
 import ProfileDetails from './components/ProfileDetails'
 import WorkGallery from './components/WorkGallery'
 import { auth } from '@/app/firebase/config'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
+import { Separator } from '@/components/ui/separator'
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger
+} from '@/components/ui/drawer'
 
 export default function InkerProfile () {
-  const router = useRouter();
-  
+  const router = useRouter()
+
   const handleLogOut = () => {
-    signOut(auth);
-    router.push('/');
-    sessionStorage.removeItem('user');
+    signOut(auth)
+    router.push('/')
+    sessionStorage.removeItem('user')
   }
 
   return (
     <div className='min-h-screen bg-black text-white'>
       <Logo />
-      <Button
-        onClick={() => handleLogOut()}
-      >
-        Sair
-      </Button>
+      <Button onClick={() => handleLogOut()}>Sair</Button>
       <div className='px-6 mt-8'>
         <ProfileDetails />
 
-        <div className='mt-8 space-y-4'>
-          <ActionButton
-            variant='primary'
-            label='Orçamento rápido'
-            onClick={() => {}}
-          />
-          <ActionButton
-            variant='secondary'
-            label='Enviar mensagem'
-            onClick={() => {}}
-          />
+        <div className='flex flex-col my-4 gap-y-2'>
+          <Drawer>
+            <DrawerTrigger>
+              <Button className='w-full'>Orçamento rápido</Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+                <DrawerDescription>
+                  This action cannot be undone.
+                </DrawerDescription>
+              </DrawerHeader>
+              <DrawerFooter>
+                <Button>Submit</Button>
+                <DrawerClose>
+                  <Button className='w-full' variant='outline'>Cancel</Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
         </div>
 
-        <div className='mt-10 border-t border-gray-800'></div>
+        <Separator />
 
         <WorkGallery />
       </div>

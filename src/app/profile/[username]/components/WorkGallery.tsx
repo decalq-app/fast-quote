@@ -2,12 +2,9 @@ import Image from 'next/image'
 
 export default function WorkGallery () {
   return (
-    <div className='mt-8'>
-      <div className='flex justify-between items-center mb-4'>
-        <h3 className='text-3xl font-bold'>Trabalho</h3>
-        <button className='text-red-500 text-lg cursor-pointer'>
-          Ver tudo
-        </button>
+    <div className='mt-4'>
+      <div className='flex justify-between items-center mb-3'>
+        <h3 className='text-lg font-medium'>Trabalho</h3>
       </div>
 
       <div className='grid grid-cols-2 gap-2'>
