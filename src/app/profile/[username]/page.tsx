@@ -42,9 +42,9 @@ import { toast } from 'sonner'
 import { useState } from 'react'
 
 const formSchema = z.object({
-  references: z.custom<File>(value => value instanceof File, {
-    message: 'Selecione um arquivo válido'
-  }),
+  // references: z.custom<File>(value => value instanceof File, {
+  //   message: 'Selecione um arquivo válido'
+  // }),
   partOfBody: z.string().min(1, 'Este campo é obrigatório'),
   size: z.coerce.number().min(0, 'Este campo é obrigatório'),
   type: z.enum(['normal', 'cobertura', 'retoque', 'reforma']),
@@ -52,7 +52,7 @@ const formSchema = z.object({
 })
 
 export default function InkerProfile () {
-  const router = useRouter();
+  const router = useRouter()
   const [drawer, setDrawer] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -65,10 +65,51 @@ export default function InkerProfile () {
     }
   })
 
-  function onSubmit (values: z.infer<typeof formSchema>) {
-    toast("Orçamento enviado com sucesso! Aguarde o contato do artista.")
+  async function onSubmit (values: z.infer<typeof formSchema>) {
+    toast('Orçamento enviado com sucesso! Aguarde o contato do artista.')
     setDrawer(false)
     console.log(values)
+
+    const payload = {
+      messaging_product: 'whatsapp',
+      to: '5541988548012',
+      type: 'template',
+      template: {
+        name: 'orcamento_rapido',
+        language: { code: 'pt_BR' },
+        components: [
+          {
+            type: 'body',
+            parameters: [
+              { type: 'text', parameter_name: 'part_of_body', text: values.partOfBody },
+              { type: 'text', parameter_name: 'size', text: values.size },
+              { type: 'text', parameter_name: 'type', text: values.type },
+              { type: 'text', parameter_name: 'idea', text: values.idea },
+            ]
+          }
+        ]
+      }
+    }
+    try {
+      const res = await fetch('/api/whatsapp/sendMessage', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        toast(`Erro: ${data.error}`)
+      } else {
+        toast('Orçamento enviado com sucesso! Aguarde o contato do artista.')
+      }
+    } catch (error) {
+      console.error('Erro ao enviar mensagem:', error)
+      toast('Erro ao enviar mensagem')
+    }
   }
 
   const handleLogOut = () => {
@@ -87,7 +128,9 @@ export default function InkerProfile () {
         <div className='flex flex-col my-4 gap-y-2'>
           <Drawer open={drawer} onClose={() => setDrawer(false)}>
             <DrawerTrigger asChild>
-              <Button className='w-full' onClick={() => setDrawer(true)}>Orçamento rápido</Button>
+              <Button className='w-full' onClick={() => setDrawer(true)}>
+                Orçamento rápido
+              </Button>
             </DrawerTrigger>
             <DrawerContent>
               <form
@@ -103,28 +146,6 @@ export default function InkerProfile () {
                 </DrawerHeader>
                 <div className='px-4 flex flex-col gap-y-4'>
                   <Form {...form}>
-                    <FormField
-                      control={form.control}
-                      name='references'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Uma imagem de referencia</FormLabel>
-                          <FormControl>
-                            {/* // TODO: Limitar tamanho e quantidade de arquivos */}
-                            <Input
-                              type='file'
-                              accept='.jpg, .jpeg, .png, .svg'
-                              onChange={e =>
-                                field.onChange(
-                                  e.target.files ? e.target.files[0] : null
-                                )
-                              }
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                     <FormField
                       control={form.control}
                       name='partOfBody'
